@@ -13,3 +13,56 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model User {
+  id       String   @id @default(uuid())
+  username String
+  email    String   @unique
+  type     UserType
+
+  products Product[] // One-to-many relation
+  orders   Order[] // Optional: if user can place orders too
+}
+
+model Product {
+  id     String @id @default(uuid())
+  user   User   @relation(fields: [userId], references: [id])
+  userId String
+
+  pricePerKg Float
+  category   Category
+  available  Boolean  @default(true)
+
+  images Image[] // One-to-many relation with Image model
+  orders Order[] // One product can be in multiple orders
+}
+
+model Image {
+  id        String  @id @default(uuid())
+  url       String // URL of the image
+  productId String // Foreign key to Product
+  product   Product @relation(fields: [productId], references: [id])
+}
+
+model Order {
+  id        String  @id @default(uuid())
+  product   Product @relation(fields: [productId], references: [id])
+  productId String
+
+  deliveryAddress String // Store full address as a single string
+  User            User?   @relation(fields: [userId], references: [id])
+  userId          String?
+}
+
+enum UserType {
+  USER
+  ADMIN
+}
+
+enum Category {
+  ELECTRONICS
+  GROCERY
+  CLOTHING
+  BOOKS
+  OTHER
+}
