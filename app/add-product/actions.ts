@@ -13,6 +13,7 @@ export async function addProduct(data: {
 }) {
   try {
     const { userId } = await auth()
+    console.log(userId)
     console.log(data)
     // if (!userId) return { success: false, message: 'Unauthorized' }
 
