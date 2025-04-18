@@ -24,16 +24,18 @@ model User {
 }
 
 model Product {
-  id     String @id @default(uuid())
-  user   User   @relation(fields: [userId], references: [id])
-  userId String
+  id          String   @id @default(uuid())
+  user        User     @relation(fields: [userId], references: [id])
+  userId      String
 
-  pricePerKg Float
-  category   Category
-  available  Boolean  @default(true)
+  name        String
+  description String
+  pricePerKg  Float
+  category    Category
+  available   Boolean  @default(true)
 
-  images Image[] // One-to-many relation with Image model
-  orders Order[] // One product can be in multiple orders
+  images      Image[]
+  orders      Order[]
 }
 
 model Image {
