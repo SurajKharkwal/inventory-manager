@@ -2,7 +2,7 @@
 
 import { prisma } from '@/lib/prisma'
 import { auth } from '@clerk/nextjs/server'
-
+type Category = 'ELECTRONICS' | 'GROCERY' | 'CLOTHING' | 'BOOKS' | 'OTHER'
 export async function addProduct(data: {
   name: string
   description: string
@@ -21,7 +21,7 @@ export async function addProduct(data: {
         name: data.name,
         description: data.description,
         pricePerKg: data.pricePerKg,
-        category: data.category as any,
+        category: data.category as Category,
         available: data.available,
         userId: userId ??"",
         images: {

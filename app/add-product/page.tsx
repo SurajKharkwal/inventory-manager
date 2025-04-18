@@ -13,19 +13,19 @@ import {
   SelectTrigger,
   SelectValue
 } from '@/components/ui/select'
-import { Switch } from '@/components/ui/switch'
 import { UploadButton } from '@/lib/uploadthings'
 import { addProduct } from './actions'
 import { Loader2 } from 'lucide-react'
-import Image from 'next/image'
 
-const categories = ['ELECTRONICS', 'GROCERY', 'CLOTHING', 'BOOKS', 'OTHER']
+const categories = ['ELECTRONICS', 'GROCERY', 'CLOTHING', 'BOOKS', 'OTHER'] as const
+
+type Category = (typeof categories)[number]
 
 export default function AddProductPage() {
   const [name, setName] = useState('')
   const [description, setDescription] = useState('')
   const [price, setPrice] = useState('')
-  const [category, setCategory] = useState('')
+  const [category, setCategory] = useState<Category | ''>('')
   const [available, setAvailable] = useState(true)
   const [imageUrls, setImageUrls] = useState<string[]>([])
   const [loading, setLoading] = useState(false)
@@ -94,7 +94,7 @@ export default function AddProductPage() {
 
         <div className="grid gap-2">
           <Label htmlFor="category">Category</Label>
-          <Select value={category} onValueChange={setCategory} required>
+          <Select value={category}   onValueChange={(val) => setCategory(val as Category)} required>
             <SelectTrigger id="category">
               <SelectValue placeholder="Select category" />
             </SelectTrigger>
@@ -108,25 +108,28 @@ export default function AddProductPage() {
           </Select>
         </div>
 
-        <div className="grid gap-2">
-          <Label htmlFor="available" className="flex items-center justify-between">
-            <span>Available</span>
-            <Switch checked={available} onCheckedChange={setAvailable} id="available" />
-          </Label>
+        <div className="flex items-center space-x-2">
+          <input
+            type="checkbox"
+            id="available"
+            checked={available}
+            onChange={(e) => setAvailable(e.target.checked)}
+          />
+          <Label htmlFor="available">Available</Label>
         </div>
 
         <div className="grid gap-2">
           <Label>Product Images</Label>
           <UploadButton
             endpoint="imageUploader"
-            onClientUploadComplete={(res: any) => {
-              const urls = res.map((f: any) => f.url)
+            onClientUploadComplete={(res ) => {
+              if (!res) return
+              const urls = res.map((f) => f.ufsUrl)
               setImageUrls((prev) => [...prev, ...urls])
               alert('Upload completed.')
             }}
             onUploadError={(err: Error) => alert(`Upload failed: ${err.message}`)}
           />
-         
         </div>
 
         <Button

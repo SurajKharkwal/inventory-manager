@@ -4,7 +4,6 @@ import { Search, ShoppingCart, X } from "lucide-react";
 // import UserDropDown from "./UserDropDown";
 import { useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
 // import logo from "../../../public/logo.png";
 import { useRouter } from "next/navigation";
 
